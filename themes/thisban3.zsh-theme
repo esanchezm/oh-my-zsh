@@ -61,6 +61,14 @@ prompt_status() {
   [[ -n "$symbols" ]] && echo "%{$bg[default]$fg[black]%} $symbols"
 }
 
+# Virtualenv: current working virtualenv
+prompt_virtualenv() {
+  local virtualenv_path="$VIRTUAL_ENV"
+  if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
+    echo -n "(`basename $virtualenv_path`) "
+  fi
+}
+
 # Directory info.
 local current_dir='${PWD/#$HOME/~}'
 
@@ -68,10 +76,12 @@ local current_dir='${PWD/#$HOME/~}'
 local git_info='$(my_git_prompt_info)'
 
 local prompt_status_symbols='$(prompt_status)'
+local prompt_virtualenv_symbols='$(prompt_virtualenv)'
 # ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[white]%}%{$reset_color%}%{$fg[cyan]%}"
 
 # Prompt format: \n # USER at MACHINE in DIRECTORY on git:BRANCH STATE [TIME] \n $
-PROMPT="${prompt_status_symbols}\
+PROMPT="${prompt_virtualenv_symbols}\
+${prompt_status_symbols}\
 %{$bg[blue]$fg[black]%} \
 ${current_dir} \
 ${git_info} \
